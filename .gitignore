@@ -1,4 +1,5 @@
 .idea
+.gitattributes
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -14,6 +15,10 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=gradle
 
 ### Gradle ###
+gradlew
+gradlew.bat
+gradle
+settings.gradle
 .gradle
 **/build/
 !src/**/build/
@@ -199,10 +204,6 @@ Temporary Items
 ### macOS Patch ###
 # iCloud generated files
 *.icloud
-
-# End of https://www.toptal.com/developers/gitignore/api/intellij,java,macos
-# Ignore Gradle project-specific cache directory
-.gradle
 
 # Ignore Gradle build output directory
 build
