@@ -15,10 +15,6 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=gradle
 
 ### Gradle ###
-gradlew
-gradlew.bat
-gradle
-settings.gradle
 .gradle
 **/build/
 !src/**/build/
