@@ -77,15 +77,11 @@ public class SongHandler {
 
         //번호 제목 가수 앨범 장르 연도 좋아요
 
-        System.out.println("-------------------------------------------------------------------------------------------------------------");
-        System.out.println(String.format("%3s%10s%10s%15s%15s%12s%10s", "번호", "제목", "가수", "앨범", "장르", "연도", "좋아요"));
-        System.out.println("-------------------------------------------------------------------------------------------------------------");
-
         for (int i = 0; i < length; i++) {
             if(like[i]) {
-                System.out.printf("%3d%15s%15s%15s%13s%15d%10s\n", no[i], title[i], singer[i], album[i], genre[i], year[i], "좋아요");
+                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", no[i], title[i], singer[i], album[i], genre[i], year[i], "좋아요!");
             } else {
-                System.out.printf("%3d%15s%15s%15s%13s%15d%10s\n", no[i], title[i], singer[i], album[i], genre[i], year[i], "싫어요");
+                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", no[i], title[i], singer[i], album[i], genre[i], year[i], "싫어요");
             }
         }
 

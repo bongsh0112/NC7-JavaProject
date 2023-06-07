@@ -12,8 +12,10 @@ public class App {
         while (SongHandler.available()) {
             SongHandler.inputSong();
             if (!promptContinue()) {
+                System.out.println("--------------------------------");
                 break;
             }
+            System.out.println("--------------------------------");
         }
 
         SongHandler.printSong();
