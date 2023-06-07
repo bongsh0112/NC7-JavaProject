@@ -43,27 +43,36 @@ public class SongHandler {
             like[length] = LIKE;
         }
 
-        loop : while (true) {
+        while (true) {
             str = Prompt.inputString("이 노래의 장르는 무엇입니까?(팝, 락, EDM, 발라드, 댄스, 힙합) ");
+            boolean b = true;
 
             switch (str) {
                 case POP:
                     genre[length] = POP;
-                    break loop;
+                    b = false;
+                    break;
                 case ROCK:
                     genre[length] = ROCK;
-                    break loop;
+                    b = false;
+                    break;
                 case ELECTRONIC:
                     genre[length] = ELECTRONIC;
-                    break loop;
+                    b = false;
+                    break;
                 case BALLAD:
                     genre[length] = BALLAD;
-                    break loop;
+                    b = false;
+                    break;
                 case HIPHOP:
                     genre[length] = HIPHOP;
-                    break loop;
+                    b = false;
+                    break;
                 default:
                     System.out.println("등록되지 않은 장르입니다.");
+            }
+            if (!b) {
+                break;
             }
 
         }
