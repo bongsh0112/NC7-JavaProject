@@ -1,24 +1,18 @@
 package bitcamp.myapp.SongHandler;
 
+import bitcamp.myapp.SongHandler.vo.Song;
 import bitcamp.myapp.util.Prompt;
 
 public class SongHandler {
 
-    public static final int MAX_SIZE = 1000;
+    public static final int MAX_SIZE = 100;
 
-    public static int[] no = new int[MAX_SIZE];
-    public static String[] title = new String[MAX_SIZE];
-    public static String[] singer = new String[MAX_SIZE];
-    public static String[] album = new String[MAX_SIZE];
-    public static String[] genre = new String[MAX_SIZE];
-    public static int[] year = new int[MAX_SIZE];
-    public static boolean[] like = new boolean[MAX_SIZE];
-
+    static Song[] songs = new Song[MAX_SIZE];
     public static int songId = 1;
     public static int length = 0;
 
-    public static boolean LIKE = true;
-    public static boolean UNLIKE = false;
+    public static final boolean LIKE = true;
+    public static final boolean UNLIKE = false;
 
     static final String POP = "팝";
     static final String ROCK = "락";
@@ -29,18 +23,24 @@ public class SongHandler {
 
     public static void inputSong() {
 
-        no[length] = songId;
-        title[length] = Prompt.inputString("노래 이름은 무엇입니까? ");
-        singer[length] = Prompt.inputString("가수는 누구입니까? ");
-        album[length] = Prompt.inputString("앨범 이름은 무엇입니까? ");
-        year[length] = Integer.parseInt(Prompt.inputString("발표된 연도는 몇년도입니까? "));
+        if(!available()) {
+            System.out.println("더 이상 입력할 수 없습니다!");
+        }
+
+        Song song = new Song();
+
+        song.no = songId;
+        song.title = Prompt.inputString("노래 이름은 무엇입니까? ");
+        song.singer = Prompt.inputString("가수는 누구입니까? ");
+        song.album = Prompt.inputString("앨범 이름은 무엇입니까? ");
+        song.year = Integer.parseInt(Prompt.inputString("발표된 연도는 몇년도입니까? "));
 
         String str = Prompt.inputString("이 노래를 좋아하십니까?(Y/n) ");
 
         if (str.equals("n")) {
-            like[length] = UNLIKE;
+            song.like = UNLIKE;
         } else {
-            like[length] = LIKE;
+            song.like = LIKE;
         }
 
         while (true) {
@@ -48,52 +48,153 @@ public class SongHandler {
             boolean b = true;
 
             switch (str) {
-                case POP:
-                    genre[length] = POP;
+                case POP -> {
+                    song.genre = POP;
                     b = false;
-                    break;
-                case ROCK:
-                    genre[length] = ROCK;
+                }
+                case ROCK -> {
+                    song.genre = ROCK;
                     b = false;
-                    break;
-                case ELECTRONIC:
-                    genre[length] = ELECTRONIC;
+                }
+                case ELECTRONIC -> {
+                    song.genre = ELECTRONIC;
                     b = false;
-                    break;
-                case BALLAD:
-                    genre[length] = BALLAD;
+                }
+                case BALLAD -> {
+                    song.genre = BALLAD;
                     b = false;
-                    break;
-                case HIPHOP:
-                    genre[length] = HIPHOP;
+                }
+                case DANCE -> {
+                    song.genre = DANCE;
                     b = false;
-                    break;
-                default:
-                    System.out.println("등록되지 않은 장르입니다.");
+                }
+                case HIPHOP -> {
+                    song.genre = HIPHOP;
+                    b = false;
+                }
+                default -> System.out.println("등록되지 않은 장르입니다.");
             }
             if (!b) {
                 break;
             }
 
         }
-
-        songId++;
+        System.out.printf("%s의 노래 %s(이)가 등록되었습니다!\n", song.singer, song.title);
+        songs[length] = song;
         length++;
+        songId++;
+    }
+
+    public static void printSongs() {
+
+        //번호 제목 가수 앨범 장르 연도 좋아요
+        for (int i = 0; i < length; i++) {
+            printASong(i + 1);
+        }
 
     }
 
-    public static void printSong() {
+    public static void printASong(int songNo) {
 
-        //번호 제목 가수 앨범 장르 연도 좋아요
+        int idx = indexOf(songNo);
 
-        for (int i = 0; i < length; i++) {
-            if(like[i]) {
-                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", no[i], title[i], singer[i], album[i], genre[i], year[i], "좋아요!");
+        if (idx >= 0) {
+            if (!songs[idx].like) {
+                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", songs[idx].no, songs[idx].title, songs[idx].singer, songs[idx].album, songs[idx].genre, songs[idx].year, "싫어요");
             } else {
-                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", no[i], title[i], singer[i], album[i], genre[i], year[i], "싫어요");
+                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", songs[idx].no, songs[idx].title, songs[idx].singer, songs[idx].album, songs[idx].genre, songs[idx].year, "좋아요");
             }
         }
 
+    }
+
+    public static void viewSong() {
+
+        int songNo = Integer.parseInt(Prompt.inputString("노래 번호? "));
+        for (int i = 0; i < length; i++) {
+            if (songs[i].no == songNo) {
+                printASong(i + 1);
+                return;
+            }
+        }
+        System.out.printf("%d번의 번호를 가진 노래는 없습니다!%n", songNo);
+    }
+
+    public static void updateSong() {
+
+        int songNo = Integer.parseInt(Prompt.inputString("노래 번호? "));
+        printASong(songNo);
+
+        for (int i = 0; i < length; i++) {
+            if (songs[i].no == songNo) {
+                while (true) {
+                    String toChange = Prompt.inputString("어떤 항목을 바꾸시겠습니까? (제목 가수 앨범 장르 연도 좋아요) ");
+                    switch (toChange) {
+                        case "제목" -> {
+                            songs[i].title = Prompt.inputString(String.format("%s -> ", songs[i].title));
+                            return;
+                        }
+                        case "가수" -> {
+                            songs[i].singer = Prompt.inputString(String.format("%s -> ", songs[i].singer));
+                            return;
+                        }
+                        case "앨범" -> {
+                            songs[i].album = Prompt.inputString(String.format("%s -> ", songs[i].album));
+                            return;
+                        }
+                        case "장르" -> {
+                            songs[i].genre = Prompt.inputString(String.format("%s -> (팝, 락, EDM, 발라드, 댄스, 힙합 중 1)", songs[i].genre));
+                            return;
+                        }
+                        case "연도" -> {
+                            songs[i].year = Integer.parseInt(Prompt.inputString(String.format("%s -> ", songs[i].year)));
+                            return;
+                        }
+                        case "좋아요" -> {
+                            if (songs[i].like) {
+                                songs[i].like = !songs[i].like;
+                                System.out.printf("좋아요 상태가 %s로 바뀌었습니다.\n", "싫어요");
+                            } else {
+                                songs[i].like = !songs[i].like;
+                                System.out.printf("좋아요 상태가 %s로 바뀌었습니다.\n", "좋아요");
+                            }
+                            return;
+                        }
+                        default -> System.out.println("잘못된 입력입니다.");
+                    }
+                }
+
+            }
+        }
+        System.out.println("해당 번호의 노래가 없습니다!");
+    }
+
+    public static void deleteSong() {
+
+        int memberNo = Prompt.inputInt("삭제할 노래의 번호? ");
+
+        int deletedIndex = indexOf(memberNo);
+        if (deletedIndex == -1) {
+            System.out.println("해당 번호의 노래가 없습니다!");
+            return;
+        }
+
+        for (int i = deletedIndex; i < length - 1; i++) {
+            songs[i] = songs[i + 1];
+        }
+
+        songs[length] = null;
+        length--;
+    }
+
+    public static int indexOf(int songNo) {
+        for (int i = 0; i < length + 1; i++) {
+            Song s = songs[i];
+            if (s.no == songNo) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public static boolean available() {

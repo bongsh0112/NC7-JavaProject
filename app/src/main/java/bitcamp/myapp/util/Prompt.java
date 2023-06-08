@@ -13,6 +13,12 @@ public class Prompt {
 
     }
 
+    public static int inputInt(String maual) {
+
+        System.out.print(maual);
+        return Integer.parseInt(scanner.nextLine());
+    }
+
     public static void scannerCloser() {
         scanner.close();
     }
