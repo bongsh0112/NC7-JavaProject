@@ -10,6 +10,7 @@ public class SongHandler {
     static Song[] songs = new Song[MAX_SIZE];
     public static int songId = 1;
     public static int length = 0;
+    public static int deleteCount = 0;
 
     public static final boolean LIKE = true;
     public static final boolean UNLIKE = false;
@@ -88,7 +89,7 @@ public class SongHandler {
     public static void printSongs() {
 
         //번호 제목 가수 앨범 장르 연도 좋아요
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length + count; i++) {
             printASong(i + 1);
         }
 
@@ -178,17 +179,18 @@ public class SongHandler {
             System.out.println("해당 번호의 노래가 없습니다!");
             return;
         }
-
+        
         for (int i = deletedIndex; i < length - 1; i++) {
             songs[i] = songs[i + 1];
         }
-
+        
         songs[length] = null;
         length--;
+        deleteCount++;
     }
 
     public static int indexOf(int songNo) {
-        for (int i = 0; i < length + 1; i++) {
+        for (int i = 0; i < length; i++) {
             Song s = songs[i];
             if (s.no == songNo) {
                 return i;
