@@ -28,49 +28,50 @@ public class SongHandler {
             System.out.println("더 이상 입력할 수 없습니다!");
         }
 
-        Song song = new Song();
 
-        song.no = songId;
-        song.title = Prompt.inputString("노래 이름은 무엇입니까? ");
-        song.singer = Prompt.inputString("가수는 누구입니까? ");
-        song.album = Prompt.inputString("앨범 이름은 무엇입니까? ");
-        song.year = Integer.parseInt(Prompt.inputString("발표된 연도는 몇년도입니까? "));
+        int no = songId;
+        String title = Prompt.inputString("노래 이름은 무엇입니까? ");
+        String singer = Prompt.inputString("가수는 누구입니까? ");
+        String album = Prompt.inputString("앨범 이름은 무엇입니까? ");
+        int year = Integer.parseInt(Prompt.inputString("발표된 연도는 몇년도입니까? "));
+        boolean like = true;
 
         String str = Prompt.inputString("이 노래를 좋아하십니까?(Y/n) ");
 
         if (str.equals("n")) {
-            song.like = UNLIKE;
+            like = UNLIKE;
         } else {
-            song.like = LIKE;
+            like = LIKE;
         }
 
+        String genre = "";
         while (true) {
-            str = Prompt.inputString("이 노래의 장르는 무엇입니까?(팝, 락, EDM, 발라드, 댄스, 힙합) ");
+            genre = Prompt.inputString("이 노래의 장르는 무엇입니까?(팝, 락, EDM, 발라드, 댄스, 힙합) ");
             boolean b = true;
 
-            switch (str) {
+            switch (genre) {
                 case POP -> {
-                    song.genre = POP;
+                    genre = POP;
                     b = false;
                 }
                 case ROCK -> {
-                    song.genre = ROCK;
+                    genre = ROCK;
                     b = false;
                 }
                 case ELECTRONIC -> {
-                    song.genre = ELECTRONIC;
+                    genre = ELECTRONIC;
                     b = false;
                 }
                 case BALLAD -> {
-                    song.genre = BALLAD;
+                    genre = BALLAD;
                     b = false;
                 }
                 case DANCE -> {
-                    song.genre = DANCE;
+                    genre = DANCE;
                     b = false;
                 }
                 case HIPHOP -> {
-                    song.genre = HIPHOP;
+                    genre = HIPHOP;
                     b = false;
                 }
                 default -> System.out.println("등록되지 않은 장르입니다.");
@@ -79,7 +80,10 @@ public class SongHandler {
                 break;
             }
 
+            //public Song(int no, String title, String singer, String album, String genre, int year, boolean like)
+
         }
+        Song song = new Song(songId, title, singer, album, genre, year, like);
         System.out.printf("%s의 노래 %s(이)가 등록되었습니다!\n", song.singer, song.title);
         songs[length] = song;
         length++;
@@ -89,7 +93,7 @@ public class SongHandler {
     public static void printSongs() {
 
         //번호 제목 가수 앨범 장르 연도 좋아요
-        for (int i = 0; i < length + count; i++) {
+        for (int i = 0; i < length + deleteCount; i++) {
             printASong(i + 1);
         }
 
@@ -100,10 +104,10 @@ public class SongHandler {
         int idx = indexOf(songNo);
 
         if (idx >= 0) {
-            if (!songs[idx].like) {
-                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", songs[idx].no, songs[idx].title, songs[idx].singer, songs[idx].album, songs[idx].genre, songs[idx].year, "싫어요");
+            if (!songs[idx].isLike()) {
+                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", songs[idx].getNo(), songs[idx].getTitle(), songs[idx].getSinger(), songs[idx].getAlbum(), songs[idx].getGenre(), songs[idx].getYear(), "싫어요");
             } else {
-                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", songs[idx].no, songs[idx].title, songs[idx].singer, songs[idx].album, songs[idx].genre, songs[idx].year, "좋아요");
+                System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", songs[idx].getNo(), songs[idx].getTitle(), songs[idx].getSinger(), songs[idx].getAlbum(), songs[idx].getGenre(), songs[idx].getYear(), "싫어요");
             }
         }
 
@@ -113,7 +117,7 @@ public class SongHandler {
 
         int songNo = Integer.parseInt(Prompt.inputString("노래 번호? "));
         for (int i = 0; i < length; i++) {
-            if (songs[i].no == songNo) {
+            if (songs[i].getNo() == songNo) {
                 printASong(i + 1);
                 return;
             }
@@ -127,33 +131,33 @@ public class SongHandler {
         printASong(songNo);
 
         for (int i = 0; i < length; i++) {
-            if (songs[i].no == songNo) {
+            if (songs[i].getNo() == songNo) {
                 while (true) {
                     String toChange = Prompt.inputString("어떤 항목을 바꾸시겠습니까? (제목 가수 앨범 장르 연도 좋아요) ");
                     switch (toChange) {
                         case "제목" -> {
-                            songs[i].title = Prompt.inputString(String.format("%s -> ", songs[i].title));
+                            songs[i].setTitle(Prompt.inputString(String.format("%s -> ", songs[i].getTitle())));
                             return;
                         }
                         case "가수" -> {
-                            songs[i].singer = Prompt.inputString(String.format("%s -> ", songs[i].singer));
+                            songs[i].setSinger(Prompt.inputString(String.format("%s -> ", songs[i].getSinger())));
                             return;
                         }
                         case "앨범" -> {
-                            songs[i].album = Prompt.inputString(String.format("%s -> ", songs[i].album));
+                            songs[i].setAlbum(Prompt.inputString(String.format("%s -> ", songs[i].getAlbum())));
                             return;
                         }
                         case "장르" -> {
-                            songs[i].genre = Prompt.inputString(String.format("%s -> (팝, 락, EDM, 발라드, 댄스, 힙합 중 1)", songs[i].genre));
+                            songs[i].setGenre(Prompt.inputString(String.format("%s -> (팝, 락, EDM, 발라드, 댄스, 힙합 중 1)", songs[i].getGenre())));
                             return;
                         }
                         case "연도" -> {
-                            songs[i].year = Integer.parseInt(Prompt.inputString(String.format("%s -> ", songs[i].year)));
+                            songs[i].setYear(Integer.parseInt(Prompt.inputString(String.format("%s -> ", songs[i].year))));
                             return;
                         }
                         case "좋아요" -> {
-                            if (songs[i].like) {
-                                songs[i].like = !songs[i].like;
+                            if (songs[i].isLike()) {
+                                songs[i].setLike(!songs[i].isLike());
                                 System.out.printf("좋아요 상태가 %s로 바뀌었습니다.\n", "싫어요");
                             } else {
                                 songs[i].like = !songs[i].like;
@@ -192,7 +196,7 @@ public class SongHandler {
     public static int indexOf(int songNo) {
         for (int i = 0; i < length; i++) {
             Song s = songs[i];
-            if (s.no == songNo) {
+            if (s.getNo() == songNo) {
                 return i;
             }
         }
