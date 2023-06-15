@@ -1,8 +1,8 @@
-package bitcamp.myapp.SongHandler.vo;
+package bitcamp.myapp.vo;
 
 public class Song {
 
-  public int no;
+  public int id;
   public String title;
   public String singer;
   public String album;
@@ -10,22 +10,12 @@ public class Song {
   public int year;
   public boolean like;
 
-  public Song(int no, String title, String singer, String album, String genre, int year, boolean like) {
-    this.no = no;
-    this.title = title;
-    this.singer = singer;
-    this.album = album;
-    this.genre = genre;
-    this.year = year;
-    this.like = like;
+  public Song() {
+    this.id++;
   }
 
-  public int getNo() {
-    return no;
-  }
-
-  public void setNo(int no) {
-    this.no = no;
+  public int getId() {
+    return id;
   }
 
   public String getTitle() {
