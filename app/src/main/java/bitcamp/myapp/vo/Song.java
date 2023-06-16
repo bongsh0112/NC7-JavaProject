@@ -14,6 +14,10 @@ public class Song {
     this.id++;
   }
 
+  public Song(int id) {
+    this.id = id;
+  }
+
   public int getId() {
     return id;
   }
