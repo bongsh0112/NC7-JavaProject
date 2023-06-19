@@ -1,6 +1,6 @@
 package bitcamp.myapp.SongHandler;
 
-import bitcamp.myapp.vo.Song;
+import bitcamp.myapp.util.List;
 import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.SongReviewBoard;
 
@@ -11,12 +11,14 @@ public class SongReviewBoardHandler implements Handler {
 
   // 인스턴스 마다 별개로 관리해야 할 데이터라면 논스태틱 필드(인스턴스 필드)로 선언한다.
   private Prompt prompt;
-  private SongReviewBoardList list = new SongReviewBoardList();
   private String title;
+  
+  private List list;
 
-  public SongReviewBoardHandler(Prompt prompt, String title) {
+  public SongReviewBoardHandler(Prompt prompt, String title, List list) {
     this.prompt = prompt;
     this.title = title;
+    this.list = list;
   }
 
   @Override
@@ -67,22 +69,22 @@ public class SongReviewBoardHandler implements Handler {
   }
 
   public void printBoards() {
-    SongReviewBoard[] boards = list.list();
-    for (int i = 0; i < boards.length; i++) {
-      printABoard(boards[i]);
+    for (int i = 0; i < list.size(); i++) {
+      SongReviewBoard board = (SongReviewBoard) this.list.get(i);
+      printABoard(board);
     }
   }
 
   //  번호 노래 감상평 가수 비밀번호 조회수 쓴날짜
   public void printABoard(SongReviewBoard board) {
-    SongReviewBoard b = list.get(board.getNo());
+    SongReviewBoard b = findBy(board.getNo());
     System.out.println(String.format("%d번 노래 : %s %s %s %d %%tY-%5$tm-%5$td",
             b.getNo(), b.getSong(), b.getContent(), b.getSinger(), b.getViewCount(), b.getCreatedDate()));
   }
 
   public void viewBoard() { // 조회 시 viewCount++
     int boardNo = this.prompt.inputInt("조회할 노래 리뷰 게시글의 번호를 입력하세요. ");
-    SongReviewBoard board = list.get(boardNo);
+    SongReviewBoard board = findBy(boardNo);
     if (board == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
@@ -93,7 +95,7 @@ public class SongReviewBoardHandler implements Handler {
 
   public void updateBoard() {
     int boardNo = this.prompt.inputInt("감상평을 수정할 게시글의 번호를 입력하세요. ");
-    SongReviewBoard board = list.get(boardNo);
+    SongReviewBoard board = findBy(boardNo);
     if (board == null) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
@@ -105,8 +107,18 @@ public class SongReviewBoardHandler implements Handler {
 
   public void deleteBoard() {
     int boardNo = this.prompt.inputInt("삭제할 게시글의 번호를 입력하세요. ");
-    if (!list.delete(boardNo)) {
+    if (!list.remove(findBy(boardNo))) {
       System.out.println("해당 번호의 게시글이 없습니다.");
     }
+  }
+  
+  private SongReviewBoard findBy(int no) {
+    for (int i = 0; i < this.list.size(); i++) {
+      SongReviewBoard b = (SongReviewBoard) this.list.get(i);
+      if (b.getNo() == no) {
+        return b;
+      }
+    }
+    return null;
   }
 }

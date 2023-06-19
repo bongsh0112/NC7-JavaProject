@@ -2,6 +2,8 @@ package bitcamp.myapp;
 
 import bitcamp.myapp.SongHandler.SongHandler;
 import bitcamp.myapp.SongHandler.SongReviewBoardHandler;
+import bitcamp.myapp.util.ArrayList;
+import bitcamp.myapp.util.LinkedList;
 import bitcamp.myapp.util.Prompt;
 
 public class App {
@@ -12,8 +14,8 @@ public class App {
         // => 기본 생성자는 Scanner를 키보드와 연결한다. OK
         Prompt prompt = new Prompt();
 
-        SongHandler songHandler = new SongHandler(prompt, "노래");
-        SongReviewBoardHandler songReviewBoardHandler = new SongReviewBoardHandler(prompt, "게시글");
+        SongHandler songHandler = new SongHandler(prompt, "노래", new ArrayList());
+        SongReviewBoardHandler songReviewBoardHandler = new SongReviewBoardHandler(prompt, "게시글", new LinkedList());
 
 
         printTitle();

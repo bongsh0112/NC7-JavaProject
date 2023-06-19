@@ -1,7 +1,8 @@
 package bitcamp.myapp.SongHandler;
 
-import bitcamp.myapp.vo.Song;
+import bitcamp.myapp.util.List;
 import bitcamp.myapp.util.Prompt;
+import bitcamp.myapp.vo.Song;
 
 public class SongHandler implements Handler {
 
@@ -18,11 +19,12 @@ public class SongHandler implements Handler {
     public String title;
     private Prompt prompt = new Prompt();
 
-    private SongList songList = new SongList();
+    private List list;
 
-    public SongHandler(Prompt prompt, String title) {
+    public SongHandler(Prompt prompt, String title, List list) {
         this.prompt = prompt;
         this.title = title;
+        this.list = list;
     }
 
     private static void printMenu() {
@@ -119,14 +121,14 @@ public class SongHandler implements Handler {
         Song song = new Song();
         song.setTitle(title); song.setSinger(singer); song.setAlbum(album); song.setGenre(genre);
         song.setYear(year); song.setLike(like);
-        songList.add(song);
+        this.list.add(song);
         System.out.printf("%s의 노래 %s(이)가 등록되었습니다!\n", song.singer, song.title);
     }
 
     public void printSongs() {
 
-         Song[] arr = songList.list();
-         for (Song s : arr) {
+         for (int i = 0; i < this.list.size(); i++) {
+             Song s = (Song) this.list.get(i);
              printASong(s.getId());
          }
 
@@ -134,9 +136,9 @@ public class SongHandler implements Handler {
 
     public void printASong(int songId) {
 
-        Song s = songList.get(songId);
+        Song s = this.findBy(songId);
         if (s == null) {
-            System.out.println("삭제된 노래");
+            System.out.println("없는 노래입니다.");
         }
 
         if (!s.isLike()) {
@@ -151,7 +153,7 @@ public class SongHandler implements Handler {
 
         int songId = Integer.parseInt(prompt.inputString("노래 번호? "));
 
-        Song s = songList.get(songId);
+        Song s = this.findBy(songId);
         if (s == null) {
             System.out.printf("%d번의 번호를 가진 노래는 없습니다!%n", songId);
             return;
@@ -164,7 +166,7 @@ public class SongHandler implements Handler {
 
         int songId = Integer.parseInt(prompt.inputString("노래 번호? "));
         printASong(songId);
-        Song s = songList.get(songId);
+        Song s = this.findBy(songId);
 
         if (s == null) {
             System.out.println("해당 번호의 노래가 없습니다!");
@@ -213,9 +215,19 @@ public class SongHandler implements Handler {
     public void deleteSong() {
 
         int songId = prompt.inputInt("삭제할 노래의 번호? ");
-        if (!songList.delete(songId)) {
+        if (!list.remove(findBy(songId))) {
             System.out.println("해당 번호의 노래가 없습니다!");
         }
+    }
+    
+    private Song findBy(int id) {
+        for (int i = 0; i < this.list.size(); i++) {
+            Song s = (Song) this.list.get(i);
+            if (s.getId() == id) {
+                return s;
+            }
+        }
+        return null;
     }
 
 }

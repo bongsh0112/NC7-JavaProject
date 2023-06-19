@@ -1,7 +1,5 @@
 package bitcamp.myapp.vo;
 
-import bitcamp.myapp.SongHandler.SongReviewBoardHandler;
-
 public class SongReviewBoard {
 
   private static int boardNo = 1;
@@ -22,7 +20,7 @@ public class SongReviewBoard {
   }
 
   public SongReviewBoard(int no) {
-    this.no = boardNo
+    this.no = boardNo;
   }
 
   public static int getBoardNo() {
