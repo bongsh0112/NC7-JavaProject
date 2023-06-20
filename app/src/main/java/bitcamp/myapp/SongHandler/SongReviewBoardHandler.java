@@ -1,7 +1,7 @@
 package bitcamp.myapp.SongHandler;
 
 import bitcamp.myapp.util.List;
-import bitcamp.myapp.util.Prompt;
+import bitcamp.myapp.util.MenuPrompt;
 import bitcamp.myapp.vo.SongReviewBoard;
 
 public class SongReviewBoardHandler implements Handler {
@@ -10,12 +10,12 @@ public class SongReviewBoardHandler implements Handler {
 
 
   // 인스턴스 마다 별개로 관리해야 할 데이터라면 논스태틱 필드(인스턴스 필드)로 선언한다.
-  private Prompt prompt;
+  private MenuPrompt prompt;
   private String title;
   
   private List list;
 
-  public SongReviewBoardHandler(Prompt prompt, String title, List list) {
+  public SongReviewBoardHandler(MenuPrompt prompt, String title, List list) {
     this.prompt = prompt;
     this.title = title;
     this.list = list;
@@ -23,63 +23,76 @@ public class SongReviewBoardHandler implements Handler {
 
   @Override
   public void execute() {
-    printMenu();
+    prompt.appendBreadcrumb("게시글", getMenu());
+    prompt.printMenu();
 
     while (true) {
-      String menuNo = prompt.inputString(String.format("%s> ", this.title));
-      if (menuNo.equals("0")) {
-        return;
-      } else if (menuNo.equals("menu")) {
-        printMenu();
-      } else if (menuNo.equals("1")) {
-        inputBoard();
-      } else if (menuNo.equals("2")) {
-        printBoards();
-      } else if (menuNo.equals("3")) {
-        viewBoard();
-      } else if (menuNo.equals("4")) {
-        updateBoard();
-      } else if (menuNo.equals("5")) {
-        deleteBoard();
-      } else {
-        System.out.println("메뉴 번호가 옳지 않습니다!");
+      String menuNo = prompt.inputMenu(); // menu, history, exception 기능은 여기서 관리
+      switch (menuNo) {
+        case "0" -> {
+          prompt.removeBreadcrumb();
+          return;
+        }
+        case "1" -> {
+          inputBoard();
+          break;
+        }
+        case "2" -> {
+          printBoards();
+          break;
+        }
+        case "3" -> {
+          viewBoard();
+          break;
+        }
+        case "4" -> {
+          updateBoard();
+          break;
+        }
+        case "5" -> {
+          deleteBoard();
+          break;
+        }
       }
     }
   }
-
-  private static void printMenu() {
-    System.out.println("1. 등록");
-    System.out.println("2. 목록");
-    System.out.println("3. 조회");
-    System.out.println("4. 변경");
-    System.out.println("5. 삭제");
-    System.out.println("0. 이전");
+  
+  private static String getMenu() {
+    StringBuilder menu = new StringBuilder();
+    
+    menu.append("1. 등록\n");
+    menu.append("2. 목록\n");
+    menu.append("3. 조회\n");
+    menu.append("4. 변경\n");
+    menu.append("5. 삭제\n");
+    menu.append("0. 메인\n");
+    
+    return menu.toString(); // StringBuilder를 이용하여 String으로 위의 것들을 저장한다. 분리할 때는 \n로 분리하면 쉬울 것.
   }
 
   public void inputBoard() {
     SongReviewBoard board = new SongReviewBoard();
 
-    String song = this.prompt.inputString("노래 이름은 무엇입니까? ");
-    String singer = prompt.inputString("가수는 누구입니까? ");
-    String content = prompt.inputString("감상평을 작성해주세요. ");
-    String password = prompt.inputString("비밀번호를 입력해주세요. ");
+    board.setSong(this.prompt.inputString("노래 이름은 무엇입니까? "));
+    board.setSinger(this.prompt.inputString("가수는 누구입니까? "));
+    board.setContent(this.prompt.inputString("감상평을 작성해주세요. "));
+    board.setPassword(this.prompt.inputString("비밀번호를 입력해주세요. "));
 
-    board.setSong(song); board.setSinger(singer); board.setContent(content); board.setPassword(password);
-    list.add(board);
+    this.list.add(board);
   }
 
   public void printBoards() {
     for (int i = 0; i < list.size(); i++) {
       SongReviewBoard board = (SongReviewBoard) this.list.get(i);
-      printABoard(board);
+      printABoard(board.getNo());
     }
   }
 
   //  번호 노래 감상평 가수 비밀번호 조회수 쓴날짜
-  public void printABoard(SongReviewBoard board) {
-    SongReviewBoard b = findBy(board.getNo());
-    System.out.println(String.format("%d번 노래 : %s %s %s %d %%tY-%5$tm-%5$td",
-            b.getNo(), b.getSong(), b.getContent(), b.getSinger(), b.getViewCount(), b.getCreatedDate()));
+  public void printABoard(int boardId) {
+    SongReviewBoard b = findBy(boardId);
+    System.out.printf("%d번 노래 : %s %s %s %d %tY-%6$tm-%6$td\n",
+            b.getNo(), b.getSong(), b.getContent(), b.getSinger(), b.getViewCount(), b.getCreatedDate());
   }
 
   public void viewBoard() { // 조회 시 viewCount++
@@ -90,7 +103,7 @@ public class SongReviewBoardHandler implements Handler {
       return;
     }
     board.setViewCount(board.getViewCount() + 1);
-    printABoard(board);
+    printABoard(board.getNo());
   }
 
   public void updateBoard() {

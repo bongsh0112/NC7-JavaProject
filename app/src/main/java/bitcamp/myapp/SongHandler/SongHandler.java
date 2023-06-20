@@ -1,7 +1,7 @@
 package bitcamp.myapp.SongHandler;
 
 import bitcamp.myapp.util.List;
-import bitcamp.myapp.util.Prompt;
+import bitcamp.myapp.util.MenuPrompt;
 import bitcamp.myapp.vo.Song;
 
 public class SongHandler implements Handler {
@@ -17,50 +17,65 @@ public class SongHandler implements Handler {
     public static final boolean UNLIKE = false;
 
     public String title;
-    private Prompt prompt = new Prompt();
+    private MenuPrompt prompt = new MenuPrompt();
 
     private List list;
 
-    public SongHandler(Prompt prompt, String title, List list) {
+    public SongHandler(MenuPrompt prompt, String title, List list) {
         this.prompt = prompt;
         this.title = title;
         this.list = list;
     }
 
-    private static void printMenu() {
-        System.out.println("1. 등록");
-        System.out.println("2. 목록");
-        System.out.println("3. 조회");
-        System.out.println("4. 변경");
-        System.out.println("5. 삭제");
-        System.out.println("0. 이전");
-    }
-
     @Override
     public void execute() {
-        printMenu();
+        
+        prompt.appendBreadcrumb("노래", getMenu());
+        prompt.printMenu();
 
         while (true) {
-            String menuNo = prompt.inputString(String.format("%s> ", this.title));
-            if (menuNo.equals("0")) {
-                return;
-            } else if (menuNo.equals("menu")) {
-                printMenu();
-            } else if (menuNo.equals("1")) {
-                inputSong();
-            } else if (menuNo.equals("2")) {
-                printSongs();
-            } else if (menuNo.equals("3")) {
-                viewSong();
-            } else if (menuNo.equals("4")) {
-                updateSong();
-            } else if (menuNo.equals("5")) {
-                deleteSong();
-            }  else {
-                System.out.println("메뉴 번호가 옳지 않습니다!");
+            String menuNo = prompt.inputMenu(); // menu, history, exception 기능은 여기서 관리
+            switch (menuNo) {
+                case "0" -> {
+                    prompt.removeBreadcrumb();
+                    return;
+                }
+                case "1" -> {
+                    inputSong();
+                    break;
+                }
+                case "2" -> {
+                    printSongs();
+                    break;
+                }
+                case "3" -> {
+                    viewSong();
+                    break;
+                }
+                case "4" -> {
+                    updateSong();
+                    break;
+                }
+                case "5" -> {
+                    deleteSong();
+                    break;
+                }
             }
         }
 
+    }
+    
+    private static String getMenu() {
+        StringBuilder menu = new StringBuilder();
+        
+        menu.append("1. 등록\n");
+        menu.append("2. 목록\n");
+        menu.append("3. 조회\n");
+        menu.append("4. 변경\n");
+        menu.append("5. 삭제\n");
+        menu.append("0. 메인\n");
+        
+        return menu.toString(); // StringBuilder를 이용하여 String으로 위의 것들을 저장한다. 분리할 때는 \n로 분리하면 쉬울 것.
     }
 
     public void inputSong() {
@@ -68,7 +83,17 @@ public class SongHandler implements Handler {
         String title = this.prompt.inputString("노래 이름은 무엇입니까? ");
         String singer = prompt.inputString("가수는 누구입니까? ");
         String album = prompt.inputString("앨범 이름은 무엇입니까? ");
-        int year = Integer.parseInt(prompt.inputString("발표된 연도는 몇년도입니까? "));
+        int year;
+        while (true) {
+            try {
+                year = Integer.parseInt(prompt.inputString("발표된 연도는 몇년도입니까? "));
+                break;
+            } catch (NumberFormatException e){
+                System.out.println("정확한 연도를 입력해주세요.");
+                continue;
+            }
+        }
+        
         boolean like = true;
 
         String str = prompt.inputString("이 노래를 좋아하십니까?(Y/n) ");
@@ -122,7 +147,7 @@ public class SongHandler implements Handler {
         song.setTitle(title); song.setSinger(singer); song.setAlbum(album); song.setGenre(genre);
         song.setYear(year); song.setLike(like);
         this.list.add(song);
-        System.out.printf("%s의 노래 %s(이)가 등록되었습니다!\n", song.singer, song.title);
+        System.out.printf("%d : %s의 노래 %s(이)가 등록되었습니다!\n", song.getId(), song.getSinger(), song.getTitle());
     }
 
     public void printSongs() {
@@ -144,7 +169,7 @@ public class SongHandler implements Handler {
         if (!s.isLike()) {
             System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", s.getId(), s.getTitle(), s.getSinger(), s.getAlbum(), s.getGenre(), s.getYear(), "싫어요");
         } else {
-            System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", s.getId(), s.getTitle(), s.getSinger(), s.getAlbum(), s.getGenre(), s.getYear(), "싫어요");
+            System.out.printf("%d번 노래 : %s - %s / %s / %s, %d년에 발매됨. %s\n", s.getId(), s.getTitle(), s.getSinger(), s.getAlbum(), s.getGenre(), s.getYear(), "좋아요");
         }
 
     }
@@ -193,7 +218,7 @@ public class SongHandler implements Handler {
                 return;
             }
             case "연도" -> {
-                s.setYear(Integer.parseInt(prompt.inputString(String.format("%s -> ", s.year))));
+                s.setYear(Integer.parseInt(prompt.inputString(String.format("%s -> ", s.getYear()))));
                 return;
             }
             case "좋아요" -> {
@@ -201,7 +226,7 @@ public class SongHandler implements Handler {
                     s.setLike(!s.isLike());
                     System.out.printf("좋아요 상태가 %s로 바뀌었습니다.\n", "싫어요");
                 } else {
-                    s.like = !s.like;
+                    s.setLike(!s.isLike());
                     System.out.printf("좋아요 상태가 %s로 바뀌었습니다.\n", "좋아요");
                 }
                 return;

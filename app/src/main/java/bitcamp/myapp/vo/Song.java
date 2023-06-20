@@ -1,23 +1,21 @@
 package bitcamp.myapp.vo;
 
 public class Song {
+  
+  private static int songId = 1;
 
-  public int id;
-  public String title;
-  public String singer;
-  public String album;
-  public String genre;
-  public int year;
-  public boolean like;
+  private int id;
+  private String title;
+  private String singer;
+  private String album;
+  private String genre;
+  private int year;
+  private boolean like;
 
   public Song() {
-    this.id++;
+    this.id = songId++;
   }
-
-  public Song(int id) {
-    this.id = id;
-  }
-
+  
   public int getId() {
     return id;
   }

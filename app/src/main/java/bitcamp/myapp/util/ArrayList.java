@@ -12,7 +12,7 @@ public class ArrayList implements List {
     if (this.size == list.length) {
       increase();
     }
-    this.list[size++] = object;
+    this.list[this.size++] = object;
     return true;
   }
 
