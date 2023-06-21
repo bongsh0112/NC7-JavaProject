@@ -1,6 +1,6 @@
 package bitcamp.myapp.vo;
 
-public class SongReviewBoard {
+public class ReviewBoard {
 
   private static int boardNo = 1;
 
@@ -13,13 +13,13 @@ public class SongReviewBoard {
   private int viewCount;
   private long createdDate;
 
-  public SongReviewBoard() {
+  public ReviewBoard() {
     this.no = boardNo++;
     this.viewCount = 0;
     this.createdDate = System.currentTimeMillis();
   }
 
-  public SongReviewBoard(int no) {
+  public ReviewBoard(int no) {
     this.no = boardNo;
   }
 
@@ -28,7 +28,7 @@ public class SongReviewBoard {
   }
 
   public static void setBoardNo(int boardNo) {
-    SongReviewBoard.boardNo = boardNo;
+    ReviewBoard.boardNo = boardNo;
   }
 
   public int getNo() {
