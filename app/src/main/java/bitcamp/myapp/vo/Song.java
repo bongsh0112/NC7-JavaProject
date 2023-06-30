@@ -1,6 +1,8 @@
 package bitcamp.myapp.vo;
 
-public class Song implements CsvObject {
+import java.io.Serializable;
+
+public class Song implements Serializable, CsvObject {
   
   private static int songId = 1;
 

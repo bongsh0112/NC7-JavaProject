@@ -1,6 +1,8 @@
 package bitcamp.myapp.vo;
 
-public class ReviewBoard implements CsvObject {
+import java.io.Serializable;
+
+public class ReviewBoard implements Serializable, CsvObject {
 
   private static int boardNo = 1;
 
