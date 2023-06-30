@@ -1,6 +1,6 @@
 package bitcamp.myapp.vo;
 
-public class ReviewBoard {
+public class ReviewBoard implements CsvObject {
 
   private static int boardNo = 1;
 
@@ -18,13 +18,44 @@ public class ReviewBoard {
     this.viewCount = 0;
     this.createdDate = System.currentTimeMillis();
   }
-
+  
   public ReviewBoard(int no) {
     this.no = boardNo;
   }
 
   public static int getBoardNo() {
     return boardNo;
+  }
+  
+  public static ReviewBoard fromCsv(String csv) {
+    String[] values = csv.split(",");
+    
+    ReviewBoard board = new ReviewBoard(Integer.parseInt(values[0]));
+    board.setSong(values[1]);
+    board.setContent(values[2]);
+    board.setSinger(values[3]);
+    board.setPassword(values[4]);
+    board.setViewCount(Integer.parseInt(values[5]));
+    board.setCreatedDate(Long.parseLong(values[6]));
+    
+    if (ReviewBoard.boardNo <= board.getNo()) {
+      ReviewBoard.boardNo = board.getNo() + 1;
+    }
+    
+    return board;
+  }
+  
+  @Override
+  public String toCsvString() {
+    return String.format("%d,%s,%s,%s,%s,%d,%d",
+            this.getNo(),
+            this.getSong(),
+            this.getContent(),
+            this.getSinger(),
+            this.getPassword(),
+            this.getViewCount(),
+            this.getCreatedDate()
+    );
   }
 
   public static void setBoardNo(int boardNo) {

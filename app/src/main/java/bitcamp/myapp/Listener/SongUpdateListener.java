@@ -40,7 +40,7 @@ public class SongUpdateListener extends AbstractSongListener {
         return;
       }
       case "장르" -> {
-        s.setGenre(prompt.inputString(String.format("%s -> (팝, 락, EDM, 발라드, 댄스, 힙합 중 1)", s.getGenre())));
+        s.setGenre(inputGenre(s, prompt));
         return;
       }
       case "연도" -> {
