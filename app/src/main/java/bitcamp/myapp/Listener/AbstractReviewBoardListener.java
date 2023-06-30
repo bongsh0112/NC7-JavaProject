@@ -1,14 +1,15 @@
 package bitcamp.myapp.Listener;
 
 import bitcamp.myapp.util.ActionListener;
-import bitcamp.myapp.util.List;
 import bitcamp.myapp.vo.ReviewBoard;
+
+import java.util.List;
 
 public abstract class AbstractReviewBoardListener implements ActionListener {
 
-  protected List list;
+  protected List<ReviewBoard> list;
 
-  public AbstractReviewBoardListener(List list) {
+  public AbstractReviewBoardListener(List<ReviewBoard> list) {
     this.list = list;
   }
 

@@ -1,12 +1,14 @@
 package bitcamp.myapp.util;
 
+import java.util.ArrayList;
+
 public class MenuGroup extends Menu {
 
-  ArrayList childs;
+  ArrayList<Menu> childs;
 
   public MenuGroup(String title) {
     super(title);
-    this.childs = new ArrayList();
+    this.childs = new ArrayList<>();
   }
 
   public void add(Menu menu) {

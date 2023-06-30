@@ -1,15 +1,23 @@
 package bitcamp.myapp;
 
 import bitcamp.myapp.Listener.*;
-import bitcamp.myapp.util.*;
+import bitcamp.myapp.util.BreadCrumbPrompt;
+import bitcamp.myapp.util.Menu;
+import bitcamp.myapp.util.MenuGroup;
+import bitcamp.myapp.vo.ReviewBoard;
+import bitcamp.myapp.vo.Song;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class App {
 
     public static void main(String[] args) {
         
         BreadCrumbPrompt prompt = new BreadCrumbPrompt();
-        List songList = new ArrayList();
-        List reviewBoardList = new LinkedList();
+        List<Song> songList = new ArrayList<>();
+        List<ReviewBoard> reviewBoardList = new LinkedList<>();
         
         MenuGroup mainMenu = new MenuGroup("메인");
         

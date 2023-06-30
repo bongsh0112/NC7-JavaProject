@@ -1,11 +1,13 @@
 package bitcamp.myapp.Listener;
 
 import bitcamp.myapp.util.BreadCrumbPrompt;
-import bitcamp.myapp.util.List;
+import bitcamp.myapp.vo.ReviewBoard;
+
+import java.util.List;
 
 public class ReviewBoardDeleteListener extends AbstractReviewBoardListener {
   
-  public ReviewBoardDeleteListener(List list) {
+  public ReviewBoardDeleteListener(List<ReviewBoard> list) {
     super(list);
   }
   

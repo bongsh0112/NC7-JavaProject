@@ -2,12 +2,13 @@ package bitcamp.myapp.Listener;
 
 import bitcamp.myapp.util.ActionListener;
 import bitcamp.myapp.util.BreadCrumbPrompt;
-import bitcamp.myapp.util.List;
 import bitcamp.myapp.vo.Song;
+
+import java.util.List;
 
 public abstract class AbstractSongListener implements ActionListener {
 
-  protected List list;
+  protected List<Song> list;
   
   protected static final String POP = "팝";
   protected static final String ROCK = "락";
@@ -18,7 +19,7 @@ public abstract class AbstractSongListener implements ActionListener {
   protected static final boolean LIKE = true;
   protected static final boolean UNLIKE = false;
 
-  public AbstractSongListener(List list) {
+  public AbstractSongListener(List<Song> list) {
     this.list = list;
   }
 

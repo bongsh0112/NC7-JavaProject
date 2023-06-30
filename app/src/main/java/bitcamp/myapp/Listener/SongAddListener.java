@@ -1,12 +1,13 @@
 package bitcamp.myapp.Listener;
 
 import bitcamp.myapp.util.BreadCrumbPrompt;
-import bitcamp.myapp.util.List;
 import bitcamp.myapp.vo.Song;
+
+import java.util.List;
 
 public class SongAddListener extends AbstractSongListener{
   
-  public SongAddListener(List list) {
+  public SongAddListener(List<Song> list) {
     super(list);
   }
   
