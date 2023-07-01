@@ -29,8 +29,8 @@ public class Song implements Serializable, CsvObject {
     song.setTitle(values[1]);
     song.setSinger(values[2]);
     song.setAlbum(values[3]);
-    song.setGenre(values[4]);
-    song.setYear(Integer.parseInt(values[5]));
+    song.setYear(Integer.parseInt(values[4]));
+    song.setGenre(values[5]);
     if (values[6].equals("like")) {
       song.setLike(true);
     } else {
@@ -48,7 +48,7 @@ public class Song implements Serializable, CsvObject {
   public String toCsvString() {
     String saveData = "";
     if (this.isLike()) {
-      saveData = String.format("%d,%s,%s,%s,%d,%s,%s",
+      saveData = String.format("%d,%s,%s,%s,%d,%s,%s\n",
               this.getId(),
               this.getTitle(),
               this.getSinger(),
@@ -56,9 +56,9 @@ public class Song implements Serializable, CsvObject {
               this.getYear(),
               this.getGenre(),
               "like"
-      );
+              );
     } else {
-      String.format("%d,%s,%s,%s,%d,%s,%s",
+      String.format("%d,%s,%s,%s,%d,%s,%s\n",
               this.getId(),
               this.getTitle(),
               this.getSinger(),

@@ -49,7 +49,7 @@ public class ReviewBoard implements Serializable, CsvObject {
   
   @Override
   public String toCsvString() {
-    return String.format("%d,%s,%s,%s,%s,%d,%d",
+    return String.format("%d,%s,%s,%s,%s,%d,%d\n",
             this.getNo(),
             this.getSong(),
             this.getContent(),

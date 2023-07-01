@@ -5,7 +5,7 @@ import bitcamp.myapp.vo.Song;
 
 import java.util.List;
 
-public class SongAddListener extends AbstractSongListener{
+public class SongAddListener extends AbstractSongListener {
   
   public SongAddListener(List<Song> list) {
     super(list);

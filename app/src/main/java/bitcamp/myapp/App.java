@@ -45,7 +45,7 @@ public class App {
     }
     
     public void prepareMenu() {
-        MenuGroup memberMenu = new MenuGroup("회원");
+        MenuGroup memberMenu = new MenuGroup("노래");
         memberMenu.add(new Menu("등록", new SongAddListener(songList)));
         memberMenu.add(new Menu("목록", new SongListListener(songList)));
         memberMenu.add(new Menu("조회", new SongDetailListener(songList)));
@@ -53,7 +53,7 @@ public class App {
         memberMenu.add(new Menu("삭제", new SongDeleteListener(songList)));
         mainMenu.add(memberMenu);
         
-        MenuGroup boardMenu = new MenuGroup("게시글");
+        MenuGroup boardMenu = new MenuGroup("노래 감상평 게시판");
         boardMenu.add(new Menu("등록", new ReviewBoardAddListener(reviewBoardList)));
         boardMenu.add(new Menu("목록", new ReviewBoardListListener(reviewBoardList)));
         boardMenu.add(new Menu("조회", new ReviewBoardDetailListener(reviewBoardList)));
@@ -84,7 +84,7 @@ public class App {
             
             while ((line = in.readLine()) != null) {
                 list.add((T)factoryMethod.invoke(null, line)); // Reflection API를 사용하여 스태틱 메서드 호출
-                // list.add(Member.fromCsv(line)); // 직접 스태틱 메서드 호출
+//                 list.add(clazz.fromCsv(line)); // 직접 스태틱 메서드 호출
             }
             
             in.close();
@@ -101,7 +101,7 @@ public class App {
             PrintWriter out = new PrintWriter(out1); // <== Decorator(장식품) 역할 수행!
             
             for (CsvObject obj : list) {
-                out.println(obj.toCsvString());
+                out.write(obj.toCsvString());
                 // Board나 Member 클래스에 필드가 추가/변경/삭제되더라도
                 // 여기 코드를 변경할 필요가 없다.
                 // 이것이 Information Expert 설계를 적용하는 이유다!
