@@ -19,7 +19,13 @@ public enum Genres {
   private final String eng;
   
   public static String getGenreToKorStringByString(String genres) {
-    Genres result = Arrays.stream(Genres.values()).filter(type -> type.getKor().equals(genres.trim()) || type.getEng().equalsIgnoreCase(genres.trim())).findFirst().orElse(null);
+    Genres result = Arrays.stream(Genres.values()).filter(
+            type -> type.getKor().equals(genres.trim()) ||
+                    type.getEng().equalsIgnoreCase(genres.trim())).findFirst().orElse(null);
+//    for (Genres g : Genres.values())
+//      if (g.getKor().equals(genres.trim()) || g.getEng().equalsIgnoreCase(genres.trim()))
+//        return g.getKor();
+//    return null;
     return result == null ? null : result.getKor();
   }
   
