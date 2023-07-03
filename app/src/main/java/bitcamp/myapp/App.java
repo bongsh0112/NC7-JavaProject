@@ -4,13 +4,19 @@ import bitcamp.myapp.Listener.*;
 import bitcamp.myapp.util.BreadCrumbPrompt;
 import bitcamp.myapp.util.Menu;
 import bitcamp.myapp.util.MenuGroup;
-import bitcamp.myapp.vo.CsvObject;
+import bitcamp.myapp.vo.AutoIncrement;
 import bitcamp.myapp.vo.ReviewBoard;
 import bitcamp.myapp.vo.Song;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.*;
-import java.lang.reflect.Method;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,51 +69,61 @@ public class App {
     }
     
     private void loadData() {
-        loadCsv("song.csv", songList, Song.class);
-        loadCsv("reviewBoard.csv", reviewBoardList, ReviewBoard.class);
+        loadJson("song.json", songList, Song.class);
+        loadJson("reviewBoard.json", reviewBoardList, ReviewBoard.class);
     }
     
     private void saveData() {
-        saveCsv("song.csv", songList);
-        saveCsv("reviewBoard.csv", reviewBoardList);
+        saveJson("song.json", songList);
+        saveJson("reviewBoard.json", reviewBoardList);
     }
     
-    @SuppressWarnings("unchecked")
-    private <T extends CsvObject> void loadCsv(String filename, List<T> list, Class<T> clazz) {
+    private <T> void loadJson(String filename, List<T> list, Class<T> clazz) { // Json 파일을 읽어온다
         try {
-            Method factoryMethod = clazz.getDeclaredMethod("fromCsv", String.class);
-            
             FileReader in0 = new FileReader(filename);
             BufferedReader in = new BufferedReader(in0); // <== Decorator 역할을 수행!
             
+            StringBuilder stringBuilder = new StringBuilder();
             String line = null;
             
             while ((line = in.readLine()) != null) {
-                list.add((T)factoryMethod.invoke(null, line)); // Reflection API를 사용하여 스태틱 메서드 호출
-//                 list.add(clazz.fromCsv(line)); // 직접 스태틱 메서드 호출
+                stringBuilder.append(line);
             }
             
             in.close();
+            
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+            Collection<T> objects = gson.fromJson(stringBuilder.toString(),
+                    TypeToken.getParameterized(Collection.class, clazz).getType());
+            /** JSON 배열 -> Collection 객체로 변환. TypeToken을 쓰는 이유는 Gson에서 요구하기 때문.
+             * fromJson은 Json 배열과 Type 정보를 파라미터로 요구하는데, Type에는 Gson이 요구하는 TypeToken을 넣어준다.
+             * TypeToken이 컬렉션 및 항목의 상세 정보를 리턴하면 Gson이 Collection 객체를 생성하고 그것이 objects이다.
+             */
+            
+            list.addAll(objects);
+            
+            Class<?>[] interfaces = clazz.getInterfaces(); // parameter로 받은 clazz의 인터페이스들을 모두 불러온다.
+            for (Class<?> info : interfaces) { // 불러온 인터페이스들에 대해
+                if (info == AutoIncrement.class) { // 인터페이스가 AutoIncrement라면
+                    AutoIncrement autoIncrement = (AutoIncrement) list.get(list.size() - 1); // list의 마지막 원소를 AutoIncrement 클래스로 형변환하여 autoIncrement 변수에 저장
+                    autoIncrement.updateKey(); // list의 마지막 원소에 대해 updateKey => vo 클래스의 static id, no를 최신화
+                    break;
+                }
+            }
             
         } catch (Exception e) {
             System.out.println(filename + " 파일을 읽는 중 오류 발생!");
         }
     }
     
-    private void saveCsv(String filename, List<? extends CsvObject> list) {
+    private void saveJson(String filename, List<?> list) {
         try {
             FileWriter out0 = new FileWriter(filename);
-            BufferedWriter out1 = new BufferedWriter(out0); // <== Decorator(장식품) 역할 수행!
-            PrintWriter out = new PrintWriter(out1); // <== Decorator(장식품) 역할 수행!
+            BufferedWriter out = new BufferedWriter(out0);
             
-            for (CsvObject obj : list) {
-                out.write(obj.toCsvString());
-                // Board나 Member 클래스에 필드가 추가/변경/삭제되더라도
-                // 여기 코드를 변경할 필요가 없다.
-                // 이것이 Information Expert 설계를 적용하는 이유다!
-                // 설계를 어떻게 하느냐에 따라 유지보수가 쉬워질 수도 있고,
-                // 어려워질 수도 있다.
-            }
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").setPrettyPrinting().create();
+            out.write(gson.toJson(list));
+            
             out.close();
             
         } catch (Exception e) {

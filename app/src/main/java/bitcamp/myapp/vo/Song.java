@@ -2,7 +2,7 @@ package bitcamp.myapp.vo;
 
 import java.io.Serializable;
 
-public class Song implements Serializable, CsvObject {
+public class Song implements Serializable, CsvObject, AutoIncrement {
   
   private static int songId = 1;
 
@@ -69,6 +69,13 @@ public class Song implements Serializable, CsvObject {
       );
     }
     return saveData;
+  }
+  
+  @Override
+  public void updateKey() {
+    if (Song.songId <= this.id) { // Song 클래스 id가 어떤 Song 객체의 id보다 작거나 같다면 현재 객체의 songId = this.id + 1
+      Song.songId = this.id + 1;
+    }
   }
   
   public boolean equals(Object obj) {

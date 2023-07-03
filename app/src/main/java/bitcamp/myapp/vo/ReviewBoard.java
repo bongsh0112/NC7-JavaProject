@@ -2,7 +2,7 @@ package bitcamp.myapp.vo;
 
 import java.io.Serializable;
 
-public class ReviewBoard implements Serializable, CsvObject {
+public class ReviewBoard implements Serializable, CsvObject, AutoIncrement {
 
   private static int boardNo = 1;
 
@@ -58,6 +58,13 @@ public class ReviewBoard implements Serializable, CsvObject {
             this.getViewCount(),
             this.getCreatedDate()
     );
+  }
+  
+  @Override
+  public void updateKey() {
+    if (ReviewBoard.boardNo <= this.no) { // ReviewBoard 클래스 boardNo가 어떤 ReviewBoard 객체의 no보다 작거나 같다면 현재 객체의 boardNo = this.no + 1
+      ReviewBoard.boardNo = this.no + 1;
+    }
   }
 
   public static void setBoardNo(int boardNo) {
