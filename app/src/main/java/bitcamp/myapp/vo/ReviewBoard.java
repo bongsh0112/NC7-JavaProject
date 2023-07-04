@@ -2,7 +2,7 @@ package bitcamp.myapp.vo;
 
 import java.io.Serializable;
 
-public class ReviewBoard implements Serializable, CsvObject, AutoIncrement {
+public class ReviewBoard implements Serializable, JsonObject, AutoIncrement {
 
   private static int boardNo = 1;
 
@@ -29,8 +29,8 @@ public class ReviewBoard implements Serializable, CsvObject, AutoIncrement {
     return boardNo;
   }
   
-  public static ReviewBoard fromCsv(String csv) {
-    String[] values = csv.split(",");
+  public static ReviewBoard fromJson(String json) {
+    String[] values = json.split(",");
     
     ReviewBoard board = new ReviewBoard(Integer.parseInt(values[0]));
     board.setSong(values[1]);
@@ -48,7 +48,7 @@ public class ReviewBoard implements Serializable, CsvObject, AutoIncrement {
   }
   
   @Override
-  public String toCsvString() {
+  public String toJsonString() {
     return String.format("%d,%s,%s,%s,%s,%d,%d\n",
             this.getNo(),
             this.getSong(),
@@ -58,6 +58,20 @@ public class ReviewBoard implements Serializable, CsvObject, AutoIncrement {
             this.getViewCount(),
             this.getCreatedDate()
     );
+  }
+  
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (this.getClass() != obj.getClass()) {
+      return false;
+    }
+    ReviewBoard b = (ReviewBoard) obj;
+    if (this.getNo() != b.getNo()) {
+      return false;
+    }
+    return true;
   }
   
   @Override

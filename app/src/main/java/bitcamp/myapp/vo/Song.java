@@ -2,7 +2,7 @@ package bitcamp.myapp.vo;
 
 import java.io.Serializable;
 
-public class Song implements Serializable, CsvObject, AutoIncrement {
+public class Song implements Serializable, JsonObject, AutoIncrement {
   
   private static int songId = 1;
 
@@ -22,8 +22,8 @@ public class Song implements Serializable, CsvObject, AutoIncrement {
     this.id = id;
   }
   
-  public static Song fromCsv(String csv) {
-    String[] values = csv.split(",");
+  public static Song fromJson(String json) {
+    String[] values = json.split(",");
     
     Song song = new Song(Integer.parseInt(values[0]));
     song.setTitle(values[1]);
@@ -45,7 +45,7 @@ public class Song implements Serializable, CsvObject, AutoIncrement {
   }
   
   @Override
-  public String toCsvString() {
+  public String toJsonString() {
     String saveData = "";
     if (this.isLike()) {
       saveData = String.format("%d,%s,%s,%s,%d,%s,%s\n",

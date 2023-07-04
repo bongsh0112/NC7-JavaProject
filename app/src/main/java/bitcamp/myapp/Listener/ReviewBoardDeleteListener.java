@@ -13,8 +13,7 @@ public class ReviewBoardDeleteListener extends AbstractReviewBoardListener {
   
   @Override
   public void service(BreadCrumbPrompt prompt) {
-    int boardNo = prompt.inputInt("삭제할 게시글의 번호를 입력하세요. ");
-    if (!list.remove(findBy(boardNo))) {
+    if (!this.list.remove(new ReviewBoard(prompt.inputInt("삭제할 게시글의 번호를 입력하세요. ")))) {
       System.out.println("해당 번호의 게시글이 없습니다.");
     }
   }

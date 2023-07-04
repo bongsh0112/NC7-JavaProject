@@ -1,11 +1,29 @@
 [
   {
     "id": 1,
-    "title": "ㅁ",
+    "title": "aa",
     "singer": "ㅁ",
     "album": "ㅁ",
     "genre": "팝",
     "year": 1,
+    "like": true
+  },
+  {
+    "id": 2,
+    "title": "s",
+    "singer": "s",
+    "album": "s",
+    "genre": "팝",
+    "year": 2,
+    "like": true
+  },
+  {
+    "id": 3,
+    "title": "ㄹ",
+    "singer": "ㄹ",
+    "album": "ㄹ",
+    "genre": "힙합",
+    "year": 2,
     "like": true
   }
 ]

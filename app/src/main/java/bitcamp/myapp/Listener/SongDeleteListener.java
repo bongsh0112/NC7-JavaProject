@@ -13,8 +13,7 @@ public class SongDeleteListener extends AbstractSongListener {
   
   @Override
   public void service(BreadCrumbPrompt prompt) {
-    int songId = prompt.inputInt("삭제할 노래의 번호? ");
-    if (!list.remove(findBy(songId))) {
+    if (!this.list.remove(new Song(prompt.inputInt("삭제할 노래의 번호를 입력해주세요. ")))) {
       System.out.println("해당 번호의 노래가 없습니다!");
     }
   }
