@@ -22,7 +22,7 @@ public class ReviewBoard implements Serializable, JsonObject, AutoIncrement {
   }
   
   public ReviewBoard(int no) {
-    this.no = boardNo;
+    this.no = no;
   }
 
   public static int getBoardNo() {
